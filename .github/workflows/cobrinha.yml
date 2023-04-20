@@ -16,11 +16,20 @@ jobs:
         with:
           github_user_name: iarasallesbarbosa
           svg_out_path: dist/github-contribution-grid-snake.svg
+          
+      - name: Set output to pass data to environment file
+        run: echo "MY_DATA=$(<path-to-your-data>)" >> ${{github.workspace}}/myenv
+        env:
+          PATH_TO_DATA: ${{github.workspace}}/path-to-your-data
 
-      - uses: crazy-max/ghaction-github-pages@v3.7.0
+      - name: Display the content of the environment file
+        run: cat ${{github.workspace}}/myenv
+
+      - name: Deploy
+        uses: crazy-max/ghaction-github-pages@v3.7.0
         with:
           target_branch: output
           build_dir: dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            MY_DATA: ${{ env.MY_DATA }}
